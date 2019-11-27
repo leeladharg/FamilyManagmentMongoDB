@@ -1,0 +1,4 @@
+server:
+  port: 9985
+
+spring.data.mongodb.uri: mongodb://leeladhar:teenasri@clusterleela-cv3qm.mongodb.net/family_db?retryWrites=true&w=majority
