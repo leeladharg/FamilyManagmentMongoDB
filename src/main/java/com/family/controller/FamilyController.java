@@ -2,7 +2,9 @@ package com.family.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.family.model.Family_Member;
+import com.family.model.GenericResponse;
 import com.family.service.FamilyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,21 +32,41 @@ public class FamilyController {
 	public ResponseEntity<Family_Member> getMemberById(@PathVariable("MID") int mid) {
 		log.info("getMemberById in Controller!....");
 		Family_Member res = familyService.getMemberById(mid);
-		
 		return new ResponseEntity<Family_Member>(res, HttpStatus.OK);
 	}
 	
-	@PostMapping("/addMember")
-	public ResponseEntity<Family_Member> addMember(@RequestBody Family_Member req ) throws JsonProcessingException {
+	@PostMapping(path = "/addMember",produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<GenericResponse> addMember(@RequestBody Family_Member req ) throws JsonProcessingException {
 		log.info("addMember in Controller!....");
 		ObjectMapper mapper = new ObjectMapper();
 		final String json = mapper.writeValueAsString(req);
 		log.info("Request json for addMember...."+ json);
-		familyService.addMember(req);
+		GenericResponse res  = familyService.addMember(req);
 		log.info("Response...addMember in Controller!....");
-		return new ResponseEntity<Family_Member>(HttpStatus.OK);
+		return new ResponseEntity<GenericResponse>(res,HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/updateMember",produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<GenericResponse> updateMember(@RequestBody Family_Member req ) throws JsonProcessingException {
+		log.info("updateMember in Controller!....");
+		ObjectMapper mapper = new ObjectMapper();
+		final String json = mapper.writeValueAsString(req);
+		log.info("Request json for updateMember...."+ json);
+		GenericResponse res  = familyService.updateMember(req);
+		log.info("Response...updateMember in Controller!....");
+		return new ResponseEntity<GenericResponse>(res,HttpStatus.OK);
 	}
 
+	@DeleteMapping(path = "/deleteMember",produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<GenericResponse> deleteMember(@RequestBody Family_Member req ) throws JsonProcessingException {
+		log.info("deleteMember in Controller!....");
+		ObjectMapper mapper = new ObjectMapper();
+		final String json = mapper.writeValueAsString(req);
+		log.info("Request json for deleteMember...."+ json);
+		GenericResponse res  = familyService.deleteMember(req);
+		log.info("Response...deleteMember in Controller!....");
+		return new ResponseEntity<GenericResponse>(res,HttpStatus.OK);
+	}
 	@RequestMapping("/")
 	public String ping() {
 		String status = "Service is Up";

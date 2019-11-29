@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.family.Repository.FamilyMemberRepository;
 import com.family.model.Family_Member;
+import com.family.model.GenericResponse;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -24,9 +25,38 @@ public class FamilyService {
 		return obj1.get();
 	}
 	
-	public void addMember(Family_Member member) {
+	public GenericResponse addMember(Family_Member member) {
 		log.info("addMember in Service!....");
+		GenericResponse res = new GenericResponse();
 		familyMemberRepo.save(member);
+		res.setStatus("Sucess");
+		res.setStatusMessage("Sucessfuly added memeber");
 		log.info("addMember in Got res from repo!....");
+		return res;
+	}
+	
+	public GenericResponse updateMember(Family_Member member) {
+		log.info("upateMember in Service!....");
+		GenericResponse res = new GenericResponse();
+		
+		Optional<Family_Member> opt =familyMemberRepo.findById(member.getMid());
+		log.info("Got res from repo....");
+		Family_Member obj=opt.get();
+		obj.setFirstName(member.getFirstName());
+		familyMemberRepo.save(obj);
+		res.setStatus("Sucess");
+		res.setStatusMessage("Sucessfuly updated memeber");
+		log.info("updateMember in Got res from repo!....");
+		return res;
+	}
+	
+	public GenericResponse deleteMember(Family_Member member) {
+		log.info("deleteMember in Service!....");
+		GenericResponse res = new GenericResponse();
+		familyMemberRepo.delete(member);
+		res.setStatus("Sucess");
+		res.setStatusMessage("Sucessfuly delete memeber");
+		log.info("deleteMember in Got res from repo!....");
+		return res;
 	}
 }
